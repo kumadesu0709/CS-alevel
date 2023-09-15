@@ -1,0 +1,6 @@
+#test_variable = 1 // 2
+#print(test_variable, type(test_variable))
+
+from sys import getsizeof
+test_var = [8,9]
+print(test_var, type(test_var), getsizeof(test_var))

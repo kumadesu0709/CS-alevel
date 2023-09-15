@@ -8,4 +8,4 @@ print("The third name is: " + name_list[2])
 last_seven = []
 for i in range(7,14):
     last_seven.append(name_list[i])
-print("The last seven names are " + str(last_seven))
+print("The last seven names are " + ", ".join(name_list[-7:-1]) + " and " + name_list[-1])
