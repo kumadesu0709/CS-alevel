@@ -1,15 +1,16 @@
 
 to_do_list = ["aaa","bbb"]
 anyotherfunction = "yes"
-anyothertask = "yes"
 whichtask = ""
 i = 0
+
 while anyotherfunction == "yes":
     x = int(input("What function would you like to use? (1 = add a task, 2 = display all tasks, 3 = check the next task, 4 = complete the task, 5 = quit to do list)"))
     if x == 5:
         print("Thank you for using the to do list.")
         break
     if x == 1:
+        anyothertask = "yes"
         while anyothertask == "yes":
             to_do_list.append(input("What task would you like to add"))
             print("Your task has been added.")
