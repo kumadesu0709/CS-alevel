@@ -10,7 +10,7 @@ def CarMatch(x):
     else:
         valid_or_not = "No"
     return valid_or_not
-def validate_number():
+def validate_car():
     tests = [('AB12 CDE', True),
              ('AB1234455', False),
              ('CD34 HFE', True),
@@ -35,4 +35,4 @@ def validate_number():
             else:
                 returnResult += "ERROR"
         print(f"{message}\n{returnResult}\n")
-validate_number()
+validate_car()
