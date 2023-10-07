@@ -1,4 +1,5 @@
 #to get square root, either number**0.5 or import math, then math.sqrt(number)
+
 class Rectangle:
 
     def __init__(self, width, height):
@@ -16,8 +17,19 @@ class Rectangle:
     def get_diagonal(self):
         self._diagonal = ((self._width ** 2) + (self._height ** 2))** 0.5
         return self._diagonal
+    
+    def __str__(self):
+        return (f"The width of this rectangle is {self._width}, the height of this rectangle is {self._height}.")
+    
 
-def test_area(width,height):
+"""def testing_rec():
+    RecTest = [("3,4", "12,14,5", True),
+               ("10,10", "100,40,1", False)]"""
+
+    
+
+"""def test_area(width,height):
+    
     area = int(width) * int(height)
     rectangle = Rectangle (width, height)
     result = ""
@@ -44,7 +56,15 @@ def test_diagonal(width,height):
         result += "Pass"
     else:
         result += "Error"
-    print(f"The width of your rectangle is {width}, the height of your rectangle is {height}, the expected diagonal is {diagonal}, the actual perimeter calculated is {rectangle.get_diagonal()}. \n{result}")
-test_area(3,4)
+    print(f"The width of your rectangle is {width}, the height of your rectangle is {height}, the expected diagonal is {diagonal}, the actual perimeter calculated is {rectangle.get_diagonal()}. \n{result}")"""
+"""test_area(3,4)
 test_perimeter(3,4)
 test_diagonal(3,4)
+rectangle = Rectangle (1,2)"""
+
+
+
+
+#OOP advantage: can keep it private so that other people can't change it
+#method = functions within the oop
+
