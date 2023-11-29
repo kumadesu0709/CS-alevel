@@ -117,14 +117,12 @@ if player == "o":
             break
         if board.is_full() == True:
             break
-    if board.is_full() == True:
-        print("It's a tie!")
     board.display()
-    if board.who_wins == 'player o':
+    if board.who_wins() == 'player o':
         print("Congrates! You win!")
-    if board.who_wins == 'player x':
+    if board.who_wins() == 'player x':
         print("Oh no! The computer won")
-    else:
+    if board.is_full() == True and board.someone_wins() == False:
         print("It's a tie!")
 
 if player == "x":
@@ -148,9 +146,9 @@ if player == "x":
         if board.is_full() == True:
             break
     board.display()
-    if board.who_wins == 'player x':
+    if board.who_wins() == 'player x':
         print("Congrates! You win!")
-    if board.who_wins == 'player o':
+    if board.who_wins() == 'player o':
         print("Oh no! The computer won...")
-    else:
+    if board.is_full() == True and board.someone_wins() == False:
         print("It's a tie!")
