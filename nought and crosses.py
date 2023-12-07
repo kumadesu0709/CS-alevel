@@ -87,7 +87,7 @@ class Board:
                 if self._data[0] == " x ":
                     winner = "player x"
                 else:
-                    winner = "player o!"
+                    winner = "player o"
             if self._data[2] == self._data[4] == self._data[6]:
                 if self._data[2] == " x ":
                     winner = "player x"
@@ -109,7 +109,7 @@ if player == "o":
             break
         if board.is_full() == True:
             break
-        x = random.randint(0,8)
+        x = 4
         while board.is_valid(x) == False:
             x = random.randint(0,8)
         board.set_cell(x," x ")
@@ -119,7 +119,7 @@ if player == "o":
             break
     board.display()
     if board.who_wins() == 'player o':
-        print("Congrates! You win!")
+        print("Congrats! You win!")
     if board.who_wins() == 'player x':
         print("Oh no! The computer won")
     if board.is_full() == True and board.someone_wins() == False:
@@ -127,7 +127,7 @@ if player == "o":
 
 if player == "x":
     while board.someone_wins() == False and board.is_full() == False:
-        x = random.randint(0,8)
+        x = 4
         while board.is_valid(x) == False:
             x = random.randint(0,8)
         board.set_cell(x," o ")
@@ -147,7 +147,7 @@ if player == "x":
             break
     board.display()
     if board.who_wins() == 'player x':
-        print("Congrates! You win!")
+        print("Congrats! You win!")
     if board.who_wins() == 'player o':
         print("Oh no! The computer won...")
     if board.is_full() == True and board.someone_wins() == False:
