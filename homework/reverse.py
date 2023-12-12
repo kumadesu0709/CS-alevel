@@ -4,8 +4,9 @@
 #developed in a Python 3.4 programming environment
 
 import random
+import time
 
-def SetUpGameBoard(Board, Boardsize):
+def SetUpGameBoard(Board, BoardSize):
   """Modifies the Board 2D list to place H and C in the centre """
   for Row in range(1, BoardSize + 1):
     for Column in range(1, BoardSize + 1):
@@ -18,20 +19,26 @@ def SetUpGameBoard(Board, Boardsize):
 
 def ChangeBoardSize():
   """Asks the user to change the board size, if the new boardsize is in between 4 and 9, the boardsize will be changed"""
-  BoardSize = int(input("Enter a board size (between 4 and 9): "))
-  while not(BoardSize >= 4 and BoardSize <= 9):
-    BoardSize = int(input("Enter a board size (between 4 and 9): "))
+  BoardSize = int(input("Enter a board size (The smallest size is 4): "))
+  while not(BoardSize >= 4):
+    BoardSize = int(input("Enter a board size (the smallest size is 4): "))
   return BoardSize
 
 def GetHumanPlayerMove(PlayerName):
   """Asks the player where they want to place their piece, return the coordinate that the player entered"""
-  print(PlayerName, "enter the coodinates of the square where you want to place your piece: ", end="")
-  Coordinates = int(input())
+  Coordinates = []
+  print(PlayerName, "enter the x coodinate of the square where you want to place your piece: ", end="")
+  Coordinates.append(int(input()))
+  print(PlayerName, "enter the y coodinate of the square where you want to place your piece: ", end="")
+  Coordinates.append(int(input()))
   return Coordinates
 
 def GetComputerPlayerMove(BoardSize):
   """Randomly generate a cooridinate, return the coordinate"""
-  return random.randint(1, BoardSize) * 10 + random.randint(1, BoardSize)
+  ComputerCoordicante = []
+  ComputerCoordicante.append(random.randint(1, BoardSize))
+  ComputerCoordicante.append(random.randint(1, BoardSize))
+  return ComputerCoordicante
 
 def GameOver(Board, BoardSize):
   """If the board is not full (i.e. still has " "), game is not over so therefore return false. If the board is full, game is over and therefore return true."""
@@ -43,16 +50,18 @@ def GameOver(Board, BoardSize):
 
 def GetPlayersName():
   """Ask the player to input their name, return the player name that they returned"""
-  PlayerName = input("What is your name? ")
+  while PlayerName == "" or PlayerName == " ":
+    PlayerName = input("What is your name? ")
   return PlayerName
 
-def CheckIfMoveIsValid(Board, Move):
+def CheckIfMoveIsValid(Board, Move, BoardSize):
   """Originally MoveIsValid is False. If the position of move is a space at the moment (i.e. ' '), then MoveIsValid becomes True. MoveIsValid is then returned at the end of the function."""
-  Row = Move % 10
-  Column = Move // 10
+  Row = Move[0]
+  Column = Move[1]
   MoveIsValid = False
   if Board[Row][Column] == " ":
-    MoveIsValid = True
+    if Row <= BoardSize and Column <= BoardSize:
+      MoveIsValid = True
   return MoveIsValid
 
 def GetPlayerScore(Board, BoardSize, Piece):
@@ -65,7 +74,7 @@ def GetPlayerScore(Board, BoardSize, Piece):
   return Score
 
 def CheckIfThereArePiecesToFlip(Board, BoardSize, StartRow, StartColumn, RowDirection, ColumnDirection):
-  """check whethere there's pieces to flip. If there is, return Ture. """
+  """check the row direction and column direction, then check whether there is any coin to flip. If there is, return Ture. """
   RowCount = StartRow + RowDirection
   ColumnCount = StartColumn + ColumnDirection
   FlipStillPossible = True
@@ -100,8 +109,8 @@ def FlipOpponentPiecesInOneDirection(Board, BoardSize, StartRow, StartColumn, Ro
 
 def MakeMove(Board, BoardSize, Move, HumanPlayersTurn):
   """Place the piece onto the right position"""
-  Row = Move % 10
-  Column = Move // 10
+  Row = Move[0]
+  Column = Move[1]
   if HumanPlayersTurn:
     Board[Row][Column] = "H"
   else:
@@ -110,6 +119,10 @@ def MakeMove(Board, BoardSize, Move, HumanPlayersTurn):
   FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, -1, 0)
   FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, 0, 1)
   FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, 0, -1)
+  FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, 1, 1)
+  FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, -1, -1)
+  FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, 1, -1)
+  FlipOpponentPiecesInOneDirection(Board, BoardSize, Row, Column, -1, 1)
 
 
 def PrintLine(BoardSize):
@@ -175,10 +188,10 @@ def PlayGame(PlayerName, BoardSize):
         Move = GetHumanPlayerMove(PlayerName)
       else:
         Move = GetComputerPlayerMove(BoardSize)
-      MoveIsValid = CheckIfMoveIsValid(Board, Move)
+      MoveIsValid = CheckIfMoveIsValid(Board, Move, BoardSize)
     if not HumanPlayersTurn:
-      print("Press the Enter key and the computer will make its move")
-      input()
+        print("Please wait. The Computer is making its move...")
+        time.sleep(2)
     MakeMove(Board, BoardSize, Move, HumanPlayersTurn)
   DisplayGameBoard(Board, BoardSize)
   HumanPlayerScore = GetPlayerScore(Board, BoardSize, "H")
@@ -198,7 +211,7 @@ PlayerName = ""
 Choice = ""
 while Choice != "q":
   DisplayMenu()
-  Choice = GetMenuChoice(PlayerName)
+  Choice = GetMenuChoice(PlayerName).lower
   if Choice == "p":
     PlayGame(PlayerName, BoardSize)
   elif Choice == "e":
