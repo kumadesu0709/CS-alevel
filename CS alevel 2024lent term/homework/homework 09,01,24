@@ -1,6 +1,7 @@
 import PyQt6.QtWidgets as qtw
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QFileDialog
 
 class MainWindow(qtw.QMainWindow):
 
@@ -40,6 +41,14 @@ class MainWindow(qtw.QMainWindow):
         ok_button.clicked.connect(self.do_stuff)
         layout.addWidget(ok_button)
 
+        open_btn = qtw.QPushButton("Open")
+        open_btn.clicked.connect(self.open_btn_click)
+        layout.addWidget(open_btn)
+
+        save_btn = qtw.QPushButton("Save")
+        save_btn.clicked.connect(self.save_btn_click)
+        layout.addWidget(save_btn)
+
 
         widget = qtw.QWidget()
         widget.setLayout(layout)
@@ -51,6 +60,14 @@ class MainWindow(qtw.QMainWindow):
         print("stuff")
         thing = QMessageBox.warning(self,"Hold up", "You did stuff", QMessageBox.StandardButton.Ok| QMessageBox.StandardButton.Cancel)
         print(thing)
+    
+    def open_btn_click(self):
+        filename,_ = QFileDialog.getOpenFileName(self,"Open File", ".", "Text Files (*.txt *.html)")
+        print(filename)
+
+    def save_btn_click(self):
+        filename,_ = QFileDialog.getSaveFileName(self,"Save File", ".", "Text Files (*.txt *.html)")
+        print(filename)
 
 
 app = qtw.QApplication([])
