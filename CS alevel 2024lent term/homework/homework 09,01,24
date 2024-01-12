@@ -1,5 +1,6 @@
 import PyQt6.QtWidgets as qtw
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMessageBox
 
 class MainWindow(qtw.QMainWindow):
 
@@ -35,6 +36,9 @@ class MainWindow(qtw.QMainWindow):
         self.button2 = qtw.QPushButton("Cancel")
         layout.addWidget(self.button1)
         layout.addWidget(self.button2)
+        ok_button = qtw.QPushButton("ok")
+        ok_button.clicked.connect(self.do_stuff)
+        layout.addWidget(ok_button)
 
 
         widget = qtw.QWidget()
@@ -42,6 +46,12 @@ class MainWindow(qtw.QMainWindow):
         
 
         self.setCentralWidget(widget)
+
+    def do_stuff(self):
+        print("stuff")
+        thing = QMessageBox.warning(self,"Hold up", "You did stuff", QMessageBox.StandardButton.Ok| QMessageBox.StandardButton.Cancel)
+        print(thing)
+
 
 app = qtw.QApplication([])
 

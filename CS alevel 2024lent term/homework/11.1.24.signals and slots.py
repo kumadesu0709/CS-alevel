@@ -1,6 +1,7 @@
 import PyQt6.QtWidgets as qtw
 # import PyQt6.QtCore as qtc
 from PyQt6 import QtGui as qtg
+from PyQt6.QtWidgets import QMessageBox
 
 class MainWindow(qtw.QMainWindow):
 
@@ -21,6 +22,7 @@ class MainWindow(qtw.QMainWindow):
 
 
 
+
         widget = qtw.QWidget()
         widget.setLayout(layout)
 
@@ -28,6 +30,9 @@ class MainWindow(qtw.QMainWindow):
     
     def ok_btn_pushed(self):
         self.metre.setText(str(int(self.line_edit.text()) * 0.3048))
+        dlg = QMessageBox.warning(self,"Quit?","Are you sure", QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+        if dlg == QMessageBox.ok:
+            self.close
 
 app = qtw.QApplication([])
 

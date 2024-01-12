@@ -1,6 +1,7 @@
 import PyQt6.QtWidgets as qtw
 # import PyQt6.QtCore as qtc
 from PyQt6 import QtGui as qtg
+from PyQt6.QtWidgets import QMessageBox
 
 class MainWindow(qtw.QMainWindow):
 
