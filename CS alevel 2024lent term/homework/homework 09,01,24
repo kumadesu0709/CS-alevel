@@ -1,0 +1,50 @@
+import PyQt6.QtWidgets as qtw
+from PyQt6.QtCore import Qt
+
+class MainWindow(qtw.QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("My Awesome App")
+
+        layout = qtw.QVBoxLayout()
+        self.label = qtw.QLabel("WidgetDemo")
+        layout.addWidget(self.label)
+
+        combo = qtw.QComboBox()
+        combo.addItems(["One","Two","Three","Four"])
+        layout.addWidget(combo)
+
+        self.checkbox1 = qtw.QCheckBox("Choose this")
+        layout.addWidget(self.checkbox1)
+        self.checkbox2 = qtw.QCheckBox("and this?")
+        layout.addWidget(self.checkbox2)
+
+        self.line_edit = qtw.QLineEdit("Type Here")
+        layout.addWidget(self.line_edit)
+
+        self.radio_button1 = qtw.QRadioButton("This one?")
+        self.radio_button2 = qtw.QRadioButton("Or this one?")
+        layout.addWidget(self.radio_button1)
+        layout.addWidget(self.radio_button2)
+
+        self.slider= qtw.QSlider(Qt.Orientation.Horizontal)
+        layout.addWidget(self.slider)
+
+        self.button1 = qtw.QPushButton("Ok")
+        self.button2 = qtw.QPushButton("Cancel")
+        layout.addWidget(self.button1)
+        layout.addWidget(self.button2)
+
+
+        widget = qtw.QWidget()
+        widget.setLayout(layout)
+        
+
+        self.setCentralWidget(widget)
+
+app = qtw.QApplication([])
+
+window = MainWindow()
+window.show()
+app.exec()

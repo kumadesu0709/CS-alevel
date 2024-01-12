@@ -1,0 +1,59 @@
+"""list = ["C","F","A","E","D","B"]
+for i in range(len(list)-1):
+    for j in range(len(list)-1-i):
+        if list[j]>list[j+1]:
+            letter = list[j]
+            list[j] = list[j+1]
+            list[j+1] = letter
+print(list)"""
+
+
+"""list = ["C","F","A","E","D","B"]
+for i in range(len(list)-1):
+    for j in range(len(list)-1-i):
+        if list[j]<list[j+1]:
+            letter = list[j]
+            list[j] = list[j+1]
+            list[j+1] = letter
+print(list)"""
+
+"""list = ["C","F","A","E","D","B"]
+no_of_comp = 0
+no_of_ex = 0
+no_of_pass = 0
+for i in range(len(list)-1):
+    for j in range(len(list)-1-i):
+        if list[j]>list[j+1]:
+            letter = list[j]
+            list[j] = list[j+1]
+            list[j+1] = letter
+            no_of_ex += 1
+        no_of_comp += 1
+        if list[j] < list[j+1]:
+            no_of_pass += 1
+print(list)
+print(f'number of comparisons: {no_of_comp}')
+print(f'number of exchanges: {no_of_ex}')
+print(f'number of passes: {no_of_pass}')"""
+
+"""import random
+list = random.sample(range(1,500),50)"""
+list = [23,17,45,6,78,21]
+unsorted = list
+no_of_comp = 0
+no_of_ex = 0
+no_of_pass = 0
+i = 0
+for i in range(len(list)-1):
+    for j in range(len(list)-1-i):
+        if list[j]>list[j+1]:
+            letter = list[j]
+            list[j] = list[j+1]
+            list[j+1] = letter
+            no_of_ex += 1
+        no_of_comp += 1
+    no_of_pass += 1
+print(list)
+print(f'number of comparisons: {no_of_comp}')
+print(f'number of exchanges: {no_of_ex}')
+print(f'number of passes: {no_of_pass}')
