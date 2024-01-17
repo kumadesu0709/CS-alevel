@@ -101,8 +101,6 @@ def FlipOpponentPiecesInOneDirection(Board, BoardSize, StartRow, StartColumn, Ro
         Board[RowCount][ColumnCount] = "H"
       RowCount = RowCount + RowDirection
       ColumnCount = ColumnCount + ColumnDirection
-
-def GetFlipSquares(Board, BoardSize):
   
 
 def MakeMove(Board, BoardSize, Move, HumanPlayersTurn):
