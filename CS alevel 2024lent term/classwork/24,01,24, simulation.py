@@ -2,7 +2,7 @@
 #this code should be used in conjunction with the Preliminary Material
 #written by the AQA Programmer Team
 #developed in the Python 3.5.1 programming environment
-
+from itertools import permutations
 import math
 import random
 
@@ -268,15 +268,21 @@ class Company:
       Temp.append(Current)
     return Temp
 
-  def __GetDistanceBetweenTwoOutlets(self, Outlet1, Outlet2):
+  def __GetDistanceBetweenTwoOutlets(self, Outlet1: int, Outlet2: int) -> float:
     return math.sqrt((self._Outlets[Outlet1].GetX() - self._Outlets[Outlet2].GetX()) ** 2 + (self._Outlets[Outlet1].GetY() - self._Outlets[Outlet2].GetY()) ** 2)
 
   def CalculateDeliveryCost(self):
     ListOfOutlets = self.__GetListOfOutlets()
-    TotalDistance = 0.0
-    for Current in range (0, len(ListOfOutlets) - 1):
-      TotalDistance += self.__GetDistanceBetweenTwoOutlets(ListOfOutlets[Current], ListOfOutlets[Current + 1])
-    TotalCost = TotalDistance * self._FuelCostPerUnit
+    permutated_list = list(permutations(ListOfOutlets))
+    all_distance = []
+    for Current in range (0, len(permutated_list)):
+        distance = 0.0
+        combination = permutated_list[Current]
+        for i in range (0, len(combination)):
+            distance += self.__GetDistanceBetweenTwoOutlets(ListOfOutlets[i], ListOfOutlets[i + 1])
+        all_distance.append(distance)
+    all_distance.sort()
+    TotalCost = all_distance[0] * self._FuelCostPerUnit
     return TotalCost
 
 class Simulation:
@@ -418,9 +424,8 @@ class Simulation:
       C.NewDay()
       TotalReputation += C.GetReputationScore()
       Reputations.append(TotalReputation)
-      if C.check_if_bankrupt:
-        bankruptcompanies.append(C)
-
+      if C.check_if_bankrupt():
+        bankruptcompanies.append(self.GetIndexOfCompany(C.GetName()))
     LoopMax = self._SimulationSettlement.GetNumberOfHouseholds() - 1
     for Counter in range (0, LoopMax + 1):
       EatsOut, X, Y = self._SimulationSettlement.FindOutifHouseholdEatsOut(Counter)
@@ -433,11 +438,11 @@ class Simulation:
             break
           Current += 1
     for company_id in bankruptcompanies:
-      self.Close_Company(company_id)
+      self.CloseCompany(company_id)
     self.__DisplayCompaniesAtDayEnd()
     self.__DisplayEventsAtDayEnd()
 
-  def CloseCompany(self, ID):
+  def CloseCompany(self, ID: int):
     del(self._Companies[ID])
         
   def AddCompany(self):
