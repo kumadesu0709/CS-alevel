@@ -49,7 +49,7 @@ def calc_next_birthday(year_of_birth='',month_of_birth='',day_of_birth=''):
             age = (next_birthday - dob).days // 365     # Note, this doesn't take account of leap years so isn't perfect.
         except ValueError:
             return 'invalid data'
-        return render_template('birthday.html',dob = dob, next_birthday = next_birthday, days_to_birthday = days_to_birthday, age = age)
+        return render_template('birthday.html',dob = dob, next_birthday = next_birthday, days_to_birthday = days_to_birthday, age = age, today = today)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=4000, debug=True)
