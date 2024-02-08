@@ -1,33 +1,11 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request, render_template
 import datetime
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'This is a website!'
-
-@app.route('/hello')
-def hello():
-    return f'Hello anonymous person.'
-
-@app.route('/hello/<name>')
-def greet(name):
-    return f'Hello there, {name}'
-
-@app.route('/add')
-def add():
-    first_number = request.args.get('first','')
-    second_number = request.args.get('second','')
-    if first_number and second_number:
-        try:
-            result = int(first_number) + int(second_number)
-        except ValueError:
-            return 'invalid data'
-        return f'{first_number} + {second_number} = {result}'
-    else:
-        return 'No arguments detected'
+    return render_template('index.html')
 
 @app.route('/calculate_next_birthday')    
 def calc_next_birthday():
