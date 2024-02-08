@@ -15,7 +15,7 @@ def hello():
 @app.route('/hello/')
 @app.route('/hello/<name>')
 def greet(name=''):
-    return render_template('hello.html')
+    return render_template('hello.html',name=name)
 
 @app.route('/add')
 def add():
@@ -31,7 +31,7 @@ def add():
         return 'No arguments detected'
 
 @app.route('/calculate_next_birthday')    
-def calc_next_birthday():
+def calc_next_birthday(year_of_birth='',month_of_birth='',day_of_birth=''):
     year_of_birth = int(request.args.get('year', ''))
     month_of_birth = int(request.args.get('month', ''))
     day_of_birth = int(request.args.get('day',''))
@@ -49,7 +49,7 @@ def calc_next_birthday():
             age = (next_birthday - dob).days // 365     # Note, this doesn't take account of leap years so isn't perfect.
         except ValueError:
             return 'invalid data'
-        return f'Your next birthday is {next_birthday}<br>You have {days_to_birthday} days until your next birthday<br>You will be {age} years old'
+        return render_template('birthday.html',dob = dob, next_birthday = next_birthday, days_to_birthday = days_to_birthday, age = age)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=4000, debug=True)
