@@ -1,20 +1,21 @@
 from flask import Flask
-from flask import request
+from flask import request, render_template
 import datetime
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'This is a website!'
+    return render_template('index.html')
 
 @app.route('/hello')
 def hello():
     return f'Hello anonymous person.'
 
+@app.route('/hello/')
 @app.route('/hello/<name>')
-def greet(name):
-    return f'Hello there, {name}'
+def greet(name=''):
+    return render_template('hello.html')
 
 @app.route('/add')
 def add():
