@@ -8,9 +8,10 @@
   {% if dob %}
     <h2>Birthday Data</h2>
     <p>Your date of birth is: {{dob}}</p>
+    <p>Today is: {{dob}}</p>
     <p>Your next birthday is: {{next_birthday}}</p>
     <p>Your next birthday will be in : {{days_to_birthday}} days</p>
-    <p>You will be {age} years old</p>
+    <p>You will be {{age}} years old</p>
   {% endif %}
 </body>
 </html>
