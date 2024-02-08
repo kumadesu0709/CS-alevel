@@ -271,18 +271,46 @@ class Company:
   def __GetDistanceBetweenTwoOutlets(self, Outlet1: int, Outlet2: int) -> float:
     return math.sqrt((self._Outlets[Outlet1].GetX() - self._Outlets[Outlet2].GetX()) ** 2 + (self._Outlets[Outlet1].GetY() - self._Outlets[Outlet2].GetY()) ** 2)
 
-  def CalculateDeliveryCost(self):
+  def CalculateShortestDistance(self):
     ListOfOutlets = self.__GetListOfOutlets()
     permutated_list = list(permutations(ListOfOutlets))
-    all_distance = []
+    total_distance = 1000000000000000
     for Current in range (0, len(permutated_list)):
-        distance = 0.0
-        combination = permutated_list[Current]
-        for i in range (0, len(combination)):
-            distance += self.__GetDistanceBetweenTwoOutlets(ListOfOutlets[i], ListOfOutlets[i + 1])
-        all_distance.append(distance)
-    all_distance.sort()
-    TotalCost = all_distance[0] * self._FuelCostPerUnit
+        current_distance = 0.0
+        for i in range (0, (len(Current)-1)):
+            current_distance += self.__GetDistanceBetweenTwoOutlets(ListOfOutlets[i], ListOfOutlets[i + 1])
+        if current_distance < total_distance:
+          total_distance = current_distance
+    return total_distance
+  
+  def CalculateOriginalDistance(self):
+    ListOfOutlets = self.__GetListOfOutlets()
+    TotalDistance = 0.0
+    for Current in range (0, len(ListOfOutlets) - 1):
+      TotalDistance += self.__GetDistanceBetweenTwoOutlets(ListOfOutlets[Current], ListOfOutlets[Current + 1])
+    return TotalDistance
+  
+  def get_fast_delivery_distance(self):
+    unvisited_list = self.__GetListOfOutlets()[:]
+    total_distance = 0
+    current_outlet = unvisited_list.pop()
+    min_dist = -1
+    while len(unvisited_list) > 0:
+      for outlet in unvisited_list:
+        dist = self.__GetDistanceBetweenTwoOutlets(current_outlet,outlet)
+        if min_dist == -1:
+          min_dist = dist
+          nearest_outlet = outlet
+        elif dist < min_dist:
+          min_dist = dist
+          nearest_outlet = outlet
+      total_distance += min_dist
+      current_outlet = nearest_outlet
+      unvisited_list.remove(nearest_outlet)
+    return total_distance
+
+  def CalculateDeliveryCost(self):
+    TotalCost = self.CalculateShortestDistance * self._FuelCostPerUnit
     return TotalCost
 
 class Simulation:
@@ -331,6 +359,7 @@ class Simulation:
     print("4. Add new company")
     print("6. Advance to next day")
     print("7. Advance to jump multiple days")
+    print("8. Find out distances")
     print("Q. Quit")
     print("\nEnter your choice: ", end = "")
 
@@ -505,6 +534,14 @@ class Simulation:
     for C in self._Companies:
       print(C.GetDetails() + "\n")
     print()
+  
+  def ShowDistances(self):
+    for company in self._Companies:
+      shortest_distance = company.CalculateShortestDistance()
+      original_distance = company.CalculateOriginalDistance()
+      #astest_distance = company.get_fast_delivery_distance()
+      print(f'The total distance calculated using AQA is: {original_distance}. \n The Total distance calculated using shortest_distance is: {shortest_distance}. \n The fastest delivery distance is: ')
+
 
   def Run(self):
     day_number = 1
@@ -534,6 +571,8 @@ class Simulation:
             print(f'day {day_number}')
             self.ProcessDayEnd()
             day_number += 1
+      elif Choice == "8":
+        self.ShowDistances()
       elif Choice == "Q":
         print("Simulation finished, press Enter to close.")
         input()
