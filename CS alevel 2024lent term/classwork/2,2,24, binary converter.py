@@ -1,3 +1,4 @@
+import math
 def convert_binary(x:int):
     result = ""
     while True:
@@ -37,4 +38,42 @@ def convert_decimal_to_hex(x:int):
         result += letter
     return result
 
-print(convert_decimal_to_hex(999999999999999999))
+def convert_fraction(x:float):
+    f = x
+    digits = []
+    recurs = []
+    flag = False
+    while f != 0 and flag == False:
+        r = f * 2
+        d = math.trunc(r)
+        if f not in recurs:
+            recurs.append(f)
+        elif f in recurs:
+            flag == True
+            break   
+        if d == 1:
+            f = round((r - 1),2)
+            digits.append(1)
+        elif d == 0:
+            f = r
+            digits.append(0)
+    adding_string = " "
+    if flag == True:
+        position = recurs.index(f)
+        if position == 0:
+            for i in range (1,len(digits)):
+                adding_string += str(digits[i])
+        else:
+            for i in range (position,len(digits)):
+                adding_string += str(digits[i])
+    returnstring = "."
+    for digit in digits:
+        returnstring += str(digit)
+    if adding_string != " ":
+        returnstring += adding_string
+        returnstring += "recurring"
+    return returnstring
+
+print(convert_fraction(0.5))
+
+
