@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+  <form action = "/comment" method = "post">
+    <p>What is your comment?</p>
+    <p><input type="text" id="name" name="comment" value=""></p>
+    <p><input type = "submit" value = "Click here" /></p>
+ </form>
+{% if comments %}
+  <h2>Comments</h2>
+  {% for comment in comments %}
+    <p> • {{comment}}</br>
+  {% endfor %}
+{% endif %}
+</body>
+</html>

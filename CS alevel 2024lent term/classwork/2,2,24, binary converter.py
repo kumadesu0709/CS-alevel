@@ -49,7 +49,7 @@ def convert_fraction(x:float):
         if f not in recurs:
             recurs.append(f)
         elif f in recurs:
-            flag == True
+            flag = True
             break   
         if d == 1:
             f = round((r - 1),2)
@@ -74,6 +74,6 @@ def convert_fraction(x:float):
         returnstring += "recurring"
     return returnstring
 
-print(convert_fraction(0.5))
+print(convert_fraction(0.55))
 
 

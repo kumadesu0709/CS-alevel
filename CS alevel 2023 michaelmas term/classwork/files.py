@@ -10,7 +10,7 @@
 #file.write(bytes(int_list))
 #file.close
 
-filename = "Squidward.txt"
+filename = "dracula.txt"
 #with open(filename, 'r') as file:
     #text = file.read() #readlines = deconstructed in a line(?), readline = first line of the text, read = return the entire text as a string
     #print(text)
