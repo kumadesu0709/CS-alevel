@@ -4,28 +4,16 @@ image = image.convert("HSV")
 image = image.resize((150,100))
 pixels = image.load()
 showing_image = ""
-lower = []
-mid_lower = []
-mid_upper = []
-upper = []
-for i in range(0,64):
-    lower.append(i)
-for i in range(64,128):
-    mid_lower.append(i)
-for i in range(128,192):
-    mid_upper.append(i)
-for i in range(192,256):
-    upper.append(i)
 for y in range(100):
     for x in range(150):
         v = pixels[x,y][2]
-        if v in lower:
+        if v in range(0,64):
             showing_image = showing_image + " "
-        if v in mid_lower:
+        if v in range(64,128):
             showing_image = showing_image + "."
-        if v in mid_upper:
+        if v in range(128,192):
             showing_image = showing_image + "="
-        if v in upper:
+        if v in range(192,256):
             showing_image = showing_image + "#"
         if x == 149:
             showing_image = showing_image + "\n"
