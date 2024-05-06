@@ -11,10 +11,10 @@
 #file.close
 
 filename = "dracula.txt"
-#with open(filename, 'r') as file:
-    #text = file.read() #readlines = deconstructed in a line(?), readline = first line of the text, read = return the entire text as a string
-    #print(text)
+with open(filename, 'r') as file:
+    text = file.read() #readlines = deconstructed in a line(?), readline = first line of the text, read = return the entire text as a string
+    print(text)
 
-with open(filename, "r") as file:
+"""with open(filename, "r") as file:
     for line in file:
-        print(line, end = "")
+        print(line, end = "")"""
