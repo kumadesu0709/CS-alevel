@@ -1,0 +1,58 @@
+%!PS
+
+/Times-Bold findfont 200 scalefont setfont
+(Hello)
+100 600 moveto
+show
+
+/Times-Bold findfont 200 scalefont setfont
+1000 3 add 
+2 mul 
+54 3 div 
+add
+100 400 moveto    % Move to the location you want the text
+cvi               % Round to integer (isn't needed here)
+(             )           % Put an empty string on the stack 
+cvs               % convert a number on the stack to a string
+show              % display the string 
+
+
+
+
+/Times-Bold findfont 200 scalefont setfont
+/hypot{
+/x exch def
+/y exch def
+x x mul
+y y mul
+add
+sqrt
+} def
+6 8 hypot
+100 200 moveto    % Move to the location you want the text
+cvi               % Round to integer (isn't needed here)
+(             )           % Put an empty string on the stack 
+cvs               % convert a number on the stack to a string
+show              % display the string
+
+
+10 10 scale
+30 30 translate
+0.1 setlinewidth
+newpath
+2 5 moveto
+4 4 lineto
+3 2 lineto
+3 -1 lineto
+1 -3 lineto
+-1 -3 lineto
+-3 -1 lineto
+-3 2 lineto
+-4 4 lineto
+-2 5 lineto
+-1 4 lineto
+1 4 lineto
+closepath
+stroke
+
+showpage

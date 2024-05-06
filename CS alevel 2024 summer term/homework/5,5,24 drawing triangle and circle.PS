@@ -1,0 +1,49 @@
+%!PS
+/shape{
+/size exch def
+/y exch def
+/x exch def
+newpath
+x y moveto
+x size add y lineto
+/z {
+size 2 div
+3 sqrt
+mul
+y add
+} def
+/a {
+size 2 div
+x add
+} def
+a z lineto
+closepath
+stroke
+
+newpath
+
+/h{
+size 2 div
+3 sqrt
+1 exch div
+mul
+y add
+}def
+
+/r{
+size 2 div
+3 sqrt
+1 exch div
+mul
+}def
+
+a h r 0 360 arc
+closepath
+1 0.5 1 setrgbcolor fill
+stroke
+
+    
+showpage
+}def
+
+20 20 500 shape
