@@ -1,0 +1,7 @@
+8
+K a;K b;K c
+N;N;Y
+P a 12;K a 18;F b 16;P a 6;F a 27
+K c 20
+F b 28
+K b 19;F b 22;P c 8;F c 29;Dif 35;P b 4;K b 31;P a 3;P a 0;F a 21;P b 1;K b 25;P b 13;F c 23;K c 26;Dif 34;K a 24;Dif 33;P b 7;P c 5;P c 2;K a 30;K c 32;P c 11;F c 17;Dif 37;F a 15;P b 10;P a 9;Dif 36;P c 14

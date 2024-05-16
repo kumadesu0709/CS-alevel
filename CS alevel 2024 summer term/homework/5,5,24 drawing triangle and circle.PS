@@ -1,8 +1,12 @@
 %!PS
 /shape{
+/blue exch def
+/green exch def
+/red exch def
 /size exch def
 /y exch def
 /x exch def
+
 newpath
 x y moveto
 x size add y lineto
@@ -21,7 +25,6 @@ closepath
 stroke
 
 newpath
-
 /h{
 size 2 div
 3 sqrt
@@ -39,11 +42,13 @@ mul
 
 a h r 0 360 arc
 closepath
-1 0.5 1 setrgbcolor fill
+
+red green blue setrgbcolor fill
 stroke
 
-    
 showpage
 }def
 
-20 20 500 shape
+
+
+20 20 500 1 0 0 shape
