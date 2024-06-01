@@ -4,3 +4,5 @@ for a in range (1,100):
         c = csquared**0.5
         if c.is_integer() == True:
             print(f'a={a},b={b},c={c}')
+
+print("hi")
