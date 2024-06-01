@@ -45,19 +45,6 @@ class Breakthrough():
                             self.__GetCardFromDeck(CardChoice)
                         elif DiscardOrPlay == "P":
                             self.__PlayCardToSequence(CardChoice)
-                    elif MenuChoice == "S":
-                        filename = input("what would you like to name your file?:")
-                        if filename.endswith(".txt") == False:
-                            filename = filename + ".txt"
-                        file = open(filename,'w')
-                        file.write(str(self.__Score))
-                        file.write(f"\n{self.__CurrentLock.get_save_lock_string()}")
-                        file.write(f"\n{self.__CurrentLock.get_status_of_locks()}")
-                        file.write(f"\n{self.__Hand.get_save_card_string()}")
-                        file.write(f"\n{self.__Sequence.get_save_card_string()}")
-                        file.write(f'\n{self.__Discard.get_save_card_string()}')
-                        file.write(f'\n{self.__Deck.get_save_card_string()}')
-                        file.close()
                     if self.__CurrentLock.GetLockSolved():
                         self.__LockSolved = True
                         self.__ProcessLockSolved()
@@ -70,6 +57,7 @@ class Breakthrough():
         print("Lock has been solved.  Your score is now:", self.__Score)
         while self.__Discard.GetNumberOfCards() > 0:
             self.__MoveCard(self.__Discard, self.__Deck, self.__Discard.GetCardNumberAt(0))
+        self.__AddGeniusCardToDeck()
         self.__Deck.Shuffle()
         self.__CurrentLock = self.__GetRandomLock()
 
@@ -83,14 +71,15 @@ class Breakthrough():
     def __SetupGame(self):
         Choice = input("Enter L to load a game from a file, anything else to play a new game:> ").upper()
         if Choice == "L":
-            filename = input("Which file would you like to load?")
-            self.__LoadGame(filename)
+            if not self.__LoadGame("game1.txt"):
+                self.__GameOver = True
         else:
             self.__CreateStandardDeck()
             self.__Deck.Shuffle()
             for Count in range(5):
                 self.__MoveCard(self.__Deck, self.__Hand, self.__Deck.GetCardNumberAt(0))
             self.__AddDifficultyCardsToDeck()
+            self.__AddGeniusCardToDeck()
             self.__Deck.Shuffle()
             self.__CurrentLock = self.__GetRandomLock()
     
@@ -196,10 +185,28 @@ class Breakthrough():
                 print()
                 self.__Discard.AddCard(CurrentCard)
                 CurrentCard.Process(self.__Deck, self.__Discard, self.__Hand, self.__Sequence, self.__CurrentLock, Choice, CardChoice)
+            elif self.__Deck.GetCardDescriptionAt(0) == "Gen":
+                CurrentCard = self.__Deck.RemoveCard(self.__Deck.GetCardNumberAt(0))
+                print()
+                print("Genius Card drawn!")
+                print(self.__Hand.GetCardDisplay())
+                print("You may now choose a challenge that you want to solve instantly --- or you may choose to discard it")
+                Choice = input(f'would you like to (d)iscard the card, or (s)olve a challenge immediately?')
+                if Choice == 'd':
+                    self.__Discard.AddCard(CurrentCard)
+                if Choice == 's':
+                    challenge_solve = input(f'Which challenge would you want to solve? (Type in challenge 1 - {self.__CurrentLock.GetNumberOfChallenges()})')
+                    self.__CurrentLock.SetChallengeMet((int(challenge_solve) - 1), True)
+                print()
+                CurrentCard.Process(self.__Deck, self.__Discard, self.__Hand, self.__Sequence, self.__CurrentLock, Choice, CardChoice)
+
         while self.__Hand.GetNumberOfCards() < 5 and self.__Deck.GetNumberOfCards() > 0:
             if self.__Deck.GetCardDescriptionAt(0) == "Dif":
                 self.__MoveCard(self.__Deck, self.__Discard, self.__Deck.GetCardNumberAt(0))
                 print("A difficulty card was discarded from the deck when refilling the hand.")
+            if self.__Deck.GetCardDescriptionAt(0) == "Gen":
+                self.__MoveCard(self.__Deck, self.__Discard, self.__Deck.GetCardNumberAt(0))
+                print("A genius card was discarded from the deck when refilling the hand.")
             else:
                 self.__MoveCard(self.__Deck, self.__Hand, self.__Deck.GetCardNumberAt(0))
         if self.__Deck.GetNumberOfCards() == 0 and self.__Hand.GetNumberOfCards() < 5:
@@ -220,12 +227,18 @@ class Breakthrough():
 
     def __GetChoice(self):
         print()
-        Choice = input("(D)iscard inspect, (U)se card, (S)ave process:> ").upper()
+        Choice = input("(D)iscard inspect, (U)se card:> ").upper()
         return Choice
     
     def __AddDifficultyCardsToDeck(self):
         for Count in range(5):
             self.__Deck.AddCard(DifficultyCard())
+
+    def __AddGeniusCardToDeck(self):
+        number = random.randint(1,100)
+        if number <= 25:
+            self.__Deck.AddCard(GeniusCard())
+
 
     def __CreateStandardDeck(self):
         for Count in range(5):
@@ -271,7 +284,6 @@ class Challenge():
         return self._Met
 
     def GetCondition(self):
-        
         return self._Condition
 
     def SetMet(self, NewValue):
@@ -328,23 +340,6 @@ class Lock():
     
     def GetNumberOfChallenges(self): 
         return len(self._Challenges)
-    
-    def get_save_lock_string(self):
-        lockDetails =''
-        for C in self._Challenges:
-            lockDetails += ",".join(C.GetCondition()) + "; "
-        lockDetails = lockDetails[:-1]
-        return lockDetails
-        
-    def get_status_of_locks(self):
-        lockStatus = ""
-        for C in self._Challenges:
-            if C.GetMet() == True:
-                lockStatus += "Y;"
-            else:
-                lockStatus+= "N;"
-        lockStatus = lockStatus[:-1]
-        return lockStatus
 
 class Card():
     _NextCardNumber = 0
@@ -368,8 +363,6 @@ class Card():
             return " " + str(self._CardNumber)
         else:
             return str(self._CardNumber)
-    
-    
 
 class ToolCard(Card):
     def __init__(self, *args):
@@ -424,6 +417,18 @@ class DifficultyCard(Card):
             CardToMove = Deck.RemoveCard(Deck.GetCardNumberAt(0))
             Discard.AddCard(CardToMove)
             Count += 1
+
+class GeniusCard(Card):
+    def __init__(self, *args):
+        self._CardType = "Gen"   
+        if len(args) == 0:
+            super(GeniusCard, self).__init__()
+        elif len(args) == 1:
+            self._CardNumber = args[0]
+    
+    def GetDescription(self):
+        return self._CardNumber
+
 
 class CardCollection():
     def __init__(self, N):
@@ -498,13 +503,6 @@ class CardCollection():
                 LineOfDashes = self.__CreateLineOfDashes(len(self._Cards) % CARDS_PER_LINE)
             CardDisplay += LineOfDashes + "\n"
         return CardDisplay
-    
-    def get_save_card_string(self):
-        cardDetails = ""
-        for C in self._Cards:
-            cardDetails = cardDetails + C.GetDescription() + " " + str(C.GetCardNumber()) + "; "
-        cardDetails = cardDetails[:-1]
-        return cardDetails
 
 if __name__ == "__main__":
     Main()

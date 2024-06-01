@@ -45,19 +45,6 @@ class Breakthrough():
                             self.__GetCardFromDeck(CardChoice)
                         elif DiscardOrPlay == "P":
                             self.__PlayCardToSequence(CardChoice)
-                    elif MenuChoice == "S":
-                        filename = input("what would you like to name your file?:")
-                        if filename.endswith(".txt") == False:
-                            filename = filename + ".txt"
-                        file = open(filename,'w')
-                        file.write(str(self.__Score))
-                        file.write(f"\n{self.__CurrentLock.get_save_lock_string()}")
-                        file.write(f"\n{self.__CurrentLock.get_status_of_locks()}")
-                        file.write(f"\n{self.__Hand.get_save_card_string()}")
-                        file.write(f"\n{self.__Sequence.get_save_card_string()}")
-                        file.write(f'\n{self.__Discard.get_save_card_string()}')
-                        file.write(f'\n{self.__Deck.get_save_card_string()}')
-                        file.close()
                     if self.__CurrentLock.GetLockSolved():
                         self.__LockSolved = True
                         self.__ProcessLockSolved()
@@ -83,8 +70,8 @@ class Breakthrough():
     def __SetupGame(self):
         Choice = input("Enter L to load a game from a file, anything else to play a new game:> ").upper()
         if Choice == "L":
-            filename = input("Which file would you like to load?")
-            self.__LoadGame(filename)
+            if not self.__LoadGame("game1.txt"):
+                self.__GameOver = True
         else:
             self.__CreateStandardDeck()
             self.__Deck.Shuffle()
@@ -220,7 +207,7 @@ class Breakthrough():
 
     def __GetChoice(self):
         print()
-        Choice = input("(D)iscard inspect, (U)se card, (S)ave process:> ").upper()
+        Choice = input("(D)iscard inspect, (U)se card:> ").upper()
         return Choice
     
     def __AddDifficultyCardsToDeck(self):
@@ -271,7 +258,6 @@ class Challenge():
         return self._Met
 
     def GetCondition(self):
-        
         return self._Condition
 
     def SetMet(self, NewValue):
@@ -328,23 +314,6 @@ class Lock():
     
     def GetNumberOfChallenges(self): 
         return len(self._Challenges)
-    
-    def get_save_lock_string(self):
-        lockDetails =''
-        for C in self._Challenges:
-            lockDetails += ",".join(C.GetCondition()) + "; "
-        lockDetails = lockDetails[:-1]
-        return lockDetails
-        
-    def get_status_of_locks(self):
-        lockStatus = ""
-        for C in self._Challenges:
-            if C.GetMet() == True:
-                lockStatus += "Y;"
-            else:
-                lockStatus+= "N;"
-        lockStatus = lockStatus[:-1]
-        return lockStatus
 
 class Card():
     _NextCardNumber = 0
@@ -368,8 +337,6 @@ class Card():
             return " " + str(self._CardNumber)
         else:
             return str(self._CardNumber)
-    
-    
 
 class ToolCard(Card):
     def __init__(self, *args):
@@ -498,13 +465,6 @@ class CardCollection():
                 LineOfDashes = self.__CreateLineOfDashes(len(self._Cards) % CARDS_PER_LINE)
             CardDisplay += LineOfDashes + "\n"
         return CardDisplay
-    
-    def get_save_card_string(self):
-        cardDetails = ""
-        for C in self._Cards:
-            cardDetails = cardDetails + C.GetDescription() + " " + str(C.GetCardNumber()) + "; "
-        cardDetails = cardDetails[:-1]
-        return cardDetails
 
 if __name__ == "__main__":
     Main()
