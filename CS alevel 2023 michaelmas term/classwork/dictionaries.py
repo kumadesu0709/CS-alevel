@@ -10,6 +10,8 @@ print(sounds)
 sounds["cow"] = 'moo'
 print(sounds["cow"])
 
+
+
 print(sounds.get("donkey"))
 print(sounds.get("donkey", "huh?"))
 print(sounds)
@@ -24,6 +26,9 @@ if "bears" in zoo_counting:
     print("\nwe have bears")
 else:
     print("\nWe don't have bear")
+
+
+
 
 zoo_counting["lions"] = zoo_counting['lions'] + 1
 print(f'\nWe have {zoo_counting["lions"]} lions')

@@ -11,7 +11,6 @@ testing = testing.convert("HSV")
 test = testing.load()
 print(f"{testing.size}, {pixels[0,0]}")
 
-
 def tolerance(value, lower_tolerate, upper_tolerate):
     ret_list = []
     for i in range(value-lower_tolerate, value+upper_tolerate):

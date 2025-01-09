@@ -92,9 +92,6 @@ class MainWindow(qtw.QMainWindow):
 
 
 
-
-
-
 app = qtw.QApplication([])
 
 window = MainWindow()

@@ -60,6 +60,7 @@ class MainWindow(qtw.QMainWindow):
         print("stuff")
         thing = QMessageBox.warning(self,"Hold up", "You did stuff", QMessageBox.StandardButton.Ok| QMessageBox.StandardButton.Cancel)
         print(thing)
+        print(self.line_edit.text())
     
     def open_btn_click(self):
         filename,_ = QFileDialog.getOpenFileName(self,"Open File", ".", "Text Files (*.txt *.html)")
