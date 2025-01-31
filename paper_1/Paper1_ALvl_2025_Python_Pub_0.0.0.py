@@ -34,7 +34,7 @@ def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
     GameOver = False
     while not GameOver:
         DisplayState(Targets, NumbersAllowed, Score)
-        UserInput = input("Enter an expression: ")
+        UserInput = input("Enter an expression or enter QUIT to end the game: ")
         print()
         if CheckIfUserInputValid(UserInput):
             UserInputInRPN = ConvertToRPN(UserInput)
@@ -43,10 +43,17 @@ def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
                 if IsTarget:
                     NumbersAllowed = RemoveNumbersUsed(UserInput, MaxNumber, NumbersAllowed)
                     NumbersAllowed = FillNumbers(NumbersAllowed, TrainingGame, MaxNumber)
+                else:
+                    print("Your expression does not evaluate to a target.")
+                
+        elif UserInput == "QUIT":
+            GameOver = True
+            Score += 1
         Score -= 1
         if Targets[0] != -1:
             GameOver = True
         else:
+            print("Invalid infix notation.")
             Targets = UpdateTargets(Targets, TrainingGame, MaxTarget)        
     print("Game over!")
     DisplayScore(Score)
@@ -89,6 +96,7 @@ def CheckNumbersUsedAreAllInNumbersAllowed(NumbersAllowed, UserInputInRPN, MaxNu
             if int(Item) in Temp:
                 Temp.remove(int(Item))
             else:
+                print("Your number does not include valid numbers from the allowed numbers.")
                 return False            
     return True
 
@@ -97,8 +105,10 @@ def CheckValidNumber(Item, MaxNumber):
         ItemAsInteger = int(Item)
         if ItemAsInteger > 0 and ItemAsInteger <= MaxNumber:
             return True            
+        else:
+            print("The number you typed in is too big")
     return False
-    
+
 def DisplayState(Targets, NumbersAllowed, Score):
     DisplayTargets(Targets)
     DisplayNumbersAllowed(NumbersAllowed)
@@ -198,6 +208,8 @@ def GetNumberFromUserInput(UserInput, Position):
 def CheckIfUserInputValid(UserInput):
     if re.search("^([0-9]+[\\+\\-\\*\\/])+[0-9]+$", UserInput) is not None:
         return True
+    if re.search("\/0+"):
+        return False
     else:
         return False
 
