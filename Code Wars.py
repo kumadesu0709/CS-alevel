@@ -154,7 +154,7 @@ print(multiplication_table(3))"""
 
 print(find_missing_letter(['O','Q','R','S']))"""
 
-def alphanumeric(password):
+"""def alphanumeric(password):
     valid = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
     is_valid = True
     for letter in password:
@@ -162,3 +162,52 @@ def alphanumeric(password):
             is_valid = False
     return is_valid
 
+"""
+
+"""def valid_ISBN10(isbn): 
+    total_num = 0
+    if len(isbn) == 10:
+        for i in range(len(isbn)):
+            if isbn[i] in ['0','1','2','3','4','5','6','7','8','9']:
+                total_num += int(isbn[i]) * (i+1)
+            elif isbn[i] == 'X':
+                if i == 9:
+                    total_num += 10 * (i+1)
+                else:
+                    return False
+            else:
+                return False
+        if total_num % 11 == 0:
+            return True
+    return False"""
+    
+"""def hamming(n):
+    binary = ""
+    while n != 0:
+        binary = str(n%2) + binary
+        n = n//2
+    while len(binary) < 3:
+        binary = "0" + binary
+    hamming_number = 2**int(binary[0])*3**int(binary[1])*5**int(binary[2])
+    return hamming_number
+print(hamming(1))"""
+
+
+def next_smaller(n):
+    if n < 10:
+        return -1
+    string_version = str(n)
+    numbers = []
+    for number in string_version:
+        numbers.append(int(number))
+    ret_string = ""
+    if min(numbers) == 0:
+        numbers.remove(0)
+        ret_string += str(min(numbers))
+        numbers.remove(min(numbers))
+        numbers.append(0)
+    while len(numbers)>0:
+        ret_string += str(min(numbers))
+        numbers.remove(min(numbers))
+    return ret_string
+print(next_smaller(790))

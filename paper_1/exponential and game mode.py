@@ -22,8 +22,21 @@ def Main():
         TrainingGame = True
         Targets = [-1, -1, -1, -1, -1, 23, 9, 140, 82, 121, 34, 45, 68, 75, 34, 23, 119, 43, 23, 119]
     else:
-        MaxNumber = 10
-        MaxTarget = 50
+        level_of_game = ""
+        while level_of_game not in ["Easy","Medium","Hard","Extreme"]:
+            level_of_game = input("What level of gae would you like to play? Easy, Medium, Hard, or Extreme?")
+        if level_of_game == "Easy":
+            MaxNumber = 6
+            MaxTarget = 30
+        elif level_of_game == "Medium":
+            MaxNumber = 20
+            MaxTarget = 100
+        elif level_of_game == "Hard":
+            MaxNumber = 50
+            MaxTarget = 1000
+        elif level_of_game == "Extreme":
+            MaxNumber = 100
+            MaxTarget = 750
         Targets = CreateTargets(MaxNumberOfTargets, MaxTarget)        
     NumbersAllowed = FillNumbers(NumbersAllowed, TrainingGame, MaxNumber)
     PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber)
@@ -32,9 +45,10 @@ def Main():
 def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
     Score = 0
     GameOver = False
+    have_used_new_set = False
     while not GameOver:
         DisplayState(Targets, NumbersAllowed, Score)
-        UserInput = input("Enter an expression: ")
+        UserInput = input("Enter an expression, or type in 'shuffle' to get a new set of allowed numbers: ")
         print()
         if CheckIfUserInputValid(UserInput):
             UserInputInRPN = ConvertToRPN(UserInput)
@@ -43,6 +57,12 @@ def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
                 if IsTarget:
                     NumbersAllowed = RemoveNumbersUsed(UserInput, MaxNumber, NumbersAllowed)
                     NumbersAllowed = FillNumbers(NumbersAllowed, TrainingGame, MaxNumber)
+        elif UserInput == "shuffle":
+            if not have_used_new_set: 
+                have_used_new_set = True
+                NumbersAllowed = FillNumbers([], False, MaxNumber)
+            else:
+                print("You have already used this power up")
         Score -= 1
         if Targets[0] != -1:
             GameOver = True
@@ -129,33 +149,23 @@ def DisplayTargets(Targets):
 
 def ConvertToRPN(UserInput):
     Position = 0
-    Precedence = {"+": 2, "-": 2, "*": 4, "/": 4}
+    Precedence = {"+": 2, "-": 2, "*": 4, "/": 4, "^":6}
     Operators = []
+    Operand, Position = GetNumberFromUserInput(UserInput, Position)
     UserInputInRPN = []
+    UserInputInRPN.append(str(Operand))
+    Operators.append(UserInput[Position - 1])
     while Position < len(UserInput):
-        if UserInput[Position] == "(":
-            bracket_count = 0
-            closing_position = Position + 1
-            while UserInput[closing_position] != ")" or bracket_count > 0:
-                if UserInput[closing_position] == "(":
-                    bracket_count += 1
-                elif UserInput[closing_position] == ")":
-                    bracket_count -= 1
-                closing_position += 1
-            inside_brackets_rpn = ConvertToRPN(UserInput[Position+1:closing_position])
-            UserInputInRPN.extend(inside_brackets_rpn)
-            Position = closing_position + 2
-        else:
-            Operand, Position = GetNumberFromUserInput(UserInput, Position)
-            UserInputInRPN.append(str(Operand))
+        Operand, Position = GetNumberFromUserInput(UserInput, Position)
+        UserInputInRPN.append(str(Operand))
         if Position < len(UserInput):
             CurrentOperator = UserInput[Position - 1]
             while len(Operators) > 0 and Precedence[Operators[-1]] > Precedence[CurrentOperator]:
                 UserInputInRPN.append(Operators[-1])
-                Operators.pop()             
+                Operators.pop()                
             if len(Operators) > 0 and Precedence[Operators[-1]] == Precedence[CurrentOperator]:
                 UserInputInRPN.append(Operators[-1])
-                Operators.pop()
+                Operators.pop()    
             Operators.append(CurrentOperator)
         else:
             while len(Operators) > 0:
@@ -166,7 +176,7 @@ def ConvertToRPN(UserInput):
 def EvaluateRPN(UserInputInRPN):
     S = []
     while len(UserInputInRPN) > 0:
-        while UserInputInRPN[0] not in ["+", "-", "*", "/"]:
+        while UserInputInRPN[0] not in ["+", "-", "*", "/", "^"]:
             S.append(UserInputInRPN[0])
             UserInputInRPN.pop(0)        
         Num2 = float(S[-1])
@@ -182,6 +192,8 @@ def EvaluateRPN(UserInputInRPN):
             Result = Num1 * Num2
         elif UserInputInRPN[0] == "/":
             Result = Num1 / Num2
+        elif UserInputInRPN[0] == "^":
+            Result = Num1 ** Num2
         UserInputInRPN.pop(0)
         S.append(str(Result))       
     if float(S[0]) - math.floor(float(S[0])) == 0.0:
@@ -203,10 +215,10 @@ def GetNumberFromUserInput(UserInput, Position):
     if Number == "":
         return -1, Position
     else:
-        return int(Number), Position    
+        return int(Number), Position
 
 def CheckIfUserInputValid(UserInput):
-    if re.search("^(\\(*[0-9]\\)*+[\\+\\-\\*\\/])+[0-9]\\)*+$", UserInput) is not None:
+    if re.search("^([0-9]+[\\+\\-\\*\\/\\^])+[0-9]+$", UserInput) is not None:
         return True
     else:
         return False

@@ -26,10 +26,10 @@ def Main():
         MaxTarget = 50
         Targets = CreateTargets(MaxNumberOfTargets, MaxTarget)        
     NumbersAllowed = FillNumbers(NumbersAllowed, TrainingGame, MaxNumber)
-    PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber)
+    PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber, MaxNumberOfTargets)
     input()
     
-def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
+def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber, MaxNumberOfTargets):
     Score = 0
     GameOver = False
     while not GameOver:
@@ -47,19 +47,28 @@ def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
         if Targets[0] != -1:
             GameOver = True
         else:
-            Targets = UpdateTargets(Targets, TrainingGame, MaxTarget)        
+            Targets = UpdateTargets(Targets, TrainingGame, MaxTarget, MaxNumberOfTargets)        
     print("Game over!")
     DisplayScore(Score)
 
 def CheckIfUserInputEvaluationIsATarget(Targets, UserInputInRPN, Score):
     UserInputEvaluation = EvaluateRPN(UserInputInRPN)
     UserInputEvaluationIsATarget = False
-    if UserInputEvaluation != -1:
+    counts = Targets.count(UserInputEvaluation)
+    if UserInputEvaluation != -1 and counts == 1:
         for Count in range(0, len(Targets)):
             if Targets[Count] == UserInputEvaluation:
                 Score += 2
                 Targets[Count] = -1
-                UserInputEvaluationIsATarget = True        
+                UserInputEvaluationIsATarget = True
+    elif UserInputEvaluation != -1 and counts == 2:
+        start = Targets.index(UserInputEvaluation)
+        end = Targets.index(UserInputEvaluation, start+1)
+        no_of_targets_to_remove = end - start + 1
+        Targets[:] = Targets[:start] + Targets[end+1:]
+        UserInputEvaluationIsATarget = True
+        return UserInputEvaluation, Score + no_of_targets_to_remove * 2
+
     return UserInputEvaluationIsATarget, Score
     
 def RemoveNumbersUsed(UserInput, MaxNumber, NumbersAllowed):
@@ -70,14 +79,15 @@ def RemoveNumbersUsed(UserInput, MaxNumber, NumbersAllowed):
                 NumbersAllowed.remove(int(Item))
     return NumbersAllowed
 
-def UpdateTargets(Targets, TrainingGame, MaxTarget):
+def UpdateTargets(Targets, TrainingGame, MaxTarget, MaxNumberOfTargets):
     for Count in range (0, len(Targets) - 1):
         Targets[Count] = Targets[Count + 1]
     Targets.pop()
-    if TrainingGame:
-        Targets.append(Targets[-1])
-    else:
-        Targets.append(GetTarget(MaxTarget))
+    while len(Targets) != MaxNumberOfTargets:
+        if TrainingGame:
+            Targets.append(Targets[-1])
+        else:
+            Targets.append(GetTarget(MaxTarget))
     return Targets
 
 def CheckNumbersUsedAreAllInNumbersAllowed(NumbersAllowed, UserInputInRPN, MaxNumber):
@@ -131,31 +141,21 @@ def ConvertToRPN(UserInput):
     Position = 0
     Precedence = {"+": 2, "-": 2, "*": 4, "/": 4}
     Operators = []
+    Operand, Position = GetNumberFromUserInput(UserInput, Position)
     UserInputInRPN = []
+    UserInputInRPN.append(str(Operand))
+    Operators.append(UserInput[Position - 1])
     while Position < len(UserInput):
-        if UserInput[Position] == "(":
-            bracket_count = 0
-            closing_position = Position + 1
-            while UserInput[closing_position] != ")" or bracket_count > 0:
-                if UserInput[closing_position] == "(":
-                    bracket_count += 1
-                elif UserInput[closing_position] == ")":
-                    bracket_count -= 1
-                closing_position += 1
-            inside_brackets_rpn = ConvertToRPN(UserInput[Position+1:closing_position])
-            UserInputInRPN.extend(inside_brackets_rpn)
-            Position = closing_position + 2
-        else:
-            Operand, Position = GetNumberFromUserInput(UserInput, Position)
-            UserInputInRPN.append(str(Operand))
+        Operand, Position = GetNumberFromUserInput(UserInput, Position)
+        UserInputInRPN.append(str(Operand))
         if Position < len(UserInput):
             CurrentOperator = UserInput[Position - 1]
             while len(Operators) > 0 and Precedence[Operators[-1]] > Precedence[CurrentOperator]:
                 UserInputInRPN.append(Operators[-1])
-                Operators.pop()             
+                Operators.pop()                
             if len(Operators) > 0 and Precedence[Operators[-1]] == Precedence[CurrentOperator]:
                 UserInputInRPN.append(Operators[-1])
-                Operators.pop()
+                Operators.pop()    
             Operators.append(CurrentOperator)
         else:
             while len(Operators) > 0:
@@ -206,7 +206,7 @@ def GetNumberFromUserInput(UserInput, Position):
         return int(Number), Position    
 
 def CheckIfUserInputValid(UserInput):
-    if re.search("^(\\(*[0-9]\\)*+[\\+\\-\\*\\/])+[0-9]\\)*+$", UserInput) is not None:
+    if re.search("^([0-9]+[\\+\\-\\*\\/])+[0-9]+$", UserInput) is not None:
         return True
     else:
         return False

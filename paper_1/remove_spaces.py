@@ -71,6 +71,13 @@ def RemoveNumbersUsed(UserInput, MaxNumber, NumbersAllowed):
     return NumbersAllowed
 
 def UpdateTargets(Targets, TrainingGame, MaxTarget):
+    temp_targets = []
+    for target in Targets:
+        if target != -1:
+            temp_targets.append(target)
+    while len(temp_targets) != len(Targets):
+        temp_targets.insert(0,-1)
+    Targets = temp_targets
     for Count in range (0, len(Targets) - 1):
         Targets[Count] = Targets[Count + 1]
     Targets.pop()
@@ -131,31 +138,21 @@ def ConvertToRPN(UserInput):
     Position = 0
     Precedence = {"+": 2, "-": 2, "*": 4, "/": 4}
     Operators = []
+    Operand, Position = GetNumberFromUserInput(UserInput, Position)
     UserInputInRPN = []
+    UserInputInRPN.append(str(Operand))
+    Operators.append(UserInput[Position - 1])
     while Position < len(UserInput):
-        if UserInput[Position] == "(":
-            bracket_count = 0
-            closing_position = Position + 1
-            while UserInput[closing_position] != ")" or bracket_count > 0:
-                if UserInput[closing_position] == "(":
-                    bracket_count += 1
-                elif UserInput[closing_position] == ")":
-                    bracket_count -= 1
-                closing_position += 1
-            inside_brackets_rpn = ConvertToRPN(UserInput[Position+1:closing_position])
-            UserInputInRPN.extend(inside_brackets_rpn)
-            Position = closing_position + 2
-        else:
-            Operand, Position = GetNumberFromUserInput(UserInput, Position)
-            UserInputInRPN.append(str(Operand))
+        Operand, Position = GetNumberFromUserInput(UserInput, Position)
+        UserInputInRPN.append(str(Operand))
         if Position < len(UserInput):
             CurrentOperator = UserInput[Position - 1]
             while len(Operators) > 0 and Precedence[Operators[-1]] > Precedence[CurrentOperator]:
                 UserInputInRPN.append(Operators[-1])
-                Operators.pop()             
+                Operators.pop()                
             if len(Operators) > 0 and Precedence[Operators[-1]] == Precedence[CurrentOperator]:
                 UserInputInRPN.append(Operators[-1])
-                Operators.pop()
+                Operators.pop()    
             Operators.append(CurrentOperator)
         else:
             while len(Operators) > 0:
@@ -206,7 +203,7 @@ def GetNumberFromUserInput(UserInput, Position):
         return int(Number), Position    
 
 def CheckIfUserInputValid(UserInput):
-    if re.search("^(\\(*[0-9]\\)*+[\\+\\-\\*\\/])+[0-9]\\)*+$", UserInput) is not None:
+    if re.search("^([0-9]+[\\+\\-\\*\\/])+[0-9]+$", UserInput) is not None:
         return True
     else:
         return False

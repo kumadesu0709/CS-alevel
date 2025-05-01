@@ -1,4 +1,5 @@
 import math
+import re
 """sequence = [0,1]
 while sequence[len(sequence)-1] < 4000000:
     number_1 = sequence[len(sequence)-1]
@@ -23,9 +24,12 @@ while n>1:
     factor = factor + 1
 print(lastFactor)"""
 
-largest_number = 9998001
+"""largest_number = 9998001
 palindromes = []
 for num in range (10000, 9998001):
     if str(num) == str(num)[::-1]:
         palindromes.append(num)
-print(palindromes)
+print(palindromes)"""
+
+result = re.search("^(\\(?[0-9]+[\\+\\-\\*\\/])+[0-9]+\\)?$", "(1+2+3)")
+print(result.group(0).type())

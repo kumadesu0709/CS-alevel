@@ -32,10 +32,9 @@ def Main():
 def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
     Score = 0
     GameOver = False
-    have_used_new_set = False
     while not GameOver:
         DisplayState(Targets, NumbersAllowed, Score)
-        UserInput = input("Enter an expression, or type in 'shuffle' to get a new set of allowed numbers: ")
+        UserInput = input("Enter an expression: ")
         print()
         if CheckIfUserInputValid(UserInput):
             UserInputInRPN = ConvertToRPN(UserInput)
@@ -44,12 +43,6 @@ def PlayGame(Targets, NumbersAllowed, TrainingGame, MaxTarget, MaxNumber):
                 if IsTarget:
                     NumbersAllowed = RemoveNumbersUsed(UserInput, MaxNumber, NumbersAllowed)
                     NumbersAllowed = FillNumbers(NumbersAllowed, TrainingGame, MaxNumber)
-        elif UserInput == "shuffle":
-            if not have_used_new_set: 
-                have_used_new_set = True
-                NumbersAllowed = FillNumbers([], False, MaxNumber)
-            else:
-                print("You have already used this power up")
         Score -= 1
         if Targets[0] != -1:
             GameOver = True
@@ -136,7 +129,7 @@ def DisplayTargets(Targets):
 
 def ConvertToRPN(UserInput):
     Position = 0
-    Precedence = {"+": 2, "-": 2, "*": 4, "/": 4, "^":6}
+    Precedence = {"+": 2, "-": 2, "*": 4, "/": 4, "^": 6}
     Operators = []
     Operand, Position = GetNumberFromUserInput(UserInput, Position)
     UserInputInRPN = []
@@ -202,7 +195,7 @@ def GetNumberFromUserInput(UserInput, Position):
     if Number == "":
         return -1, Position
     else:
-        return int(Number), Position
+        return int(Number), Position    
 
 def CheckIfUserInputValid(UserInput):
     if re.search("^([0-9]+[\\+\\-\\*\\/\\^])+[0-9]+$", UserInput) is not None:
